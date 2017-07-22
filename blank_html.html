@@ -1,0 +1,25 @@
+<!doctype html>
+<html>
+<style>
+
+</style>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+ <!--    <link rel="stylesheet" href="css/main.css"> -->
+  <title>  GSM Finance Report Monthly sales report generator</title>
+</head>
+  <body>
+  <label>Select monthly HFM data in CSV format: </label><BR><input id="csv_input" type="file"></input> <BR>
+  <button data-bind="click: parseCsv"> Start parsing to JSON </button>
+  <div id="convertErrors"> 
+  The following errors were detected: <span data-bind="text: convertErrors"></span>
+  </div>
+  <div id="json"><span data-bind="text: parsedJson"></span></div> 
+</body>
+</html>
+<script type='text/javascript' src='js/lib/knockout-3.4.2.js'></script>
+<script type='text/javascript' src='js/lib/jquery-3.2.1.min.js'></script>
+<script type='text/javascript' src='js/lib/papaparse.min.js'></script>
+<script src='js/report_generator.js'></script>
