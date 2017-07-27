@@ -15,11 +15,55 @@
   <button data-bind="click: parseCsv"> Start parsing to JSON </button>
   <div id="convertErrors"> 
    The following errors were detected: 
-  <span data-bind="foreach: convertErrors">
-    <span data-bind="text: convertErrors"></span>
-  
+   <table>
+    <thead>
+        <tr><th>Code</th><th>Error message</th><th>Row</th></tr>
+    </thead>
+    <tbody data-bind="foreach: parsedErrors">
+      <tr>
+        <td data-bind="text: code"></td>
+        <td data-bind="text: message"></td>
+        <td data-bind="text: row"></td>
+      </tr>
+    </tbody>
+   </table>
   </div>
-  <div id="json"><span data-bind="text: parsedJson.data"></span></div> 
+  <div id="convertData"> 
+   The following data was imported:
+   <table>
+    <thead>
+        <tr>
+          <th>MTD/QTD/YTD</th>
+          <th>Region</th>
+          <th>Country</th>
+          <th>Month</th>
+          <th>Actual</th>
+          <th>Actual @ FBP </th>
+          <th>Actual @ JU </th>
+          <th>Actual @ PY rate </th>
+          <th>FBP</th>
+          <th>JU</th>
+          <th>PY @ Actual FX </th>
+          <th>PY @ FBP 16</th>
+          <th>PY @ FBP 17 </th>
+          <th>PY_FY</th>
+          <th>JU_FY</th>
+          <th>JU_SEP</th>
+        </tr>
+    </thead>
+    <tbody data-bind="foreach: parsedData">
+      <tr>
+        <td data-bind="text: mtd_qtd_ytd"></td>
+        <td data-bind="text: region"></td>
+        <td data-bind="text: country"></td>
+        <td data-bind="text: month"></td>
+        <td data-bind="text: actual"></td>
+        <td data-bind="text: actual_Fbp"></td>
+      </tr>
+    </tbody>
+   </table>
+  </div>
+  
 </body>
 </html>
 <script type='text/javascript' src='js/lib/knockout-3.4.2.js'></script>
