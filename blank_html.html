@@ -14,9 +14,12 @@
   <label>Select monthly HFM data in CSV format: </label><BR><input id="csv_input" type="file"></input> <BR>
   <button data-bind="click: parseCsv"> Start parsing to JSON </button>
   <div id="convertErrors"> 
-  The following errors were detected: <span data-bind="text: convertErrors"></span>
+   The following errors were detected: 
+  <span data-bind="foreach: convertErrors">
+    <span data-bind="text: convertErrors"></span>
+  
   </div>
-  <div id="json"><span data-bind="text: parsedJson"></span></div> 
+  <div id="json"><span data-bind="text: parsedJson.data"></span></div> 
 </body>
 </html>
 <script type='text/javascript' src='js/lib/knockout-3.4.2.js'></script>

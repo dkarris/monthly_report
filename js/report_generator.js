@@ -2,13 +2,11 @@
 
 
 var ViewModel = {
+    self : this,
     parsedJson: ko.observable(),
-    convertErrors: ko.computed(function() {
-        return ViewModel.parsedJson.errors
-    },this),
-    convertRecords: ko.computed(function() {
-        return this.parsedJson.data
-    },this)
+    // convertRecords: ko.computed(function() {
+    //      return this.parsedJson.data
+    // },this)
 };
 ko.applyBindings(ViewModel);
 function parseCsv() {
@@ -38,10 +36,15 @@ function parseCsv() {
     Papa.parse(file, config);
 };
 function processJSON(result,file) {
-    ViewModel.parsedJson(result.errors);
+    ViewModel.parsedJson(result);
+    x = result;
+    console.log(x);
 }
 function errorHandler (error,file) {
     alert (error);
     console.log(error);
 }
+ViewModel.convertErrors = ko.computed(function() {
+    return ViewModel.parsedJson().data
+    })
 
