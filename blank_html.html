@@ -1,7 +1,11 @@
 <!doctype html>
 <html>
 <style>
-
+#convertData{
+  text-align:center;
+  max-height: 100px;
+  overflow-y: scroll; 
+}
 </style>
 <head>
   <meta charset="utf-8">
@@ -37,6 +41,7 @@
           <th>Region</th>
           <th>Country</th>
           <th>Month</th>
+          <th>Platform</th>
           <th>Actual</th>
           <th>Actual @ FBP </th>
           <th>Actual @ JU </th>
@@ -57,13 +62,35 @@
         <td data-bind="text: region"></td>
         <td data-bind="text: country"></td>
         <td data-bind="text: month"></td>
+        <td data-bind="text: platform"></td>
         <td data-bind="text: actual"></td>
         <td data-bind="text: actual_Fbp"></td>
+        <td data-bind="text: actual_Ju"></td>
+        <td data-bind="text: actual_Pyrate"></td>
+        <td data-bind="text: fbp"></td>
+        <td data-bind="text: ju"></td>
+        <td data-bind="text: py_actualFx"></td>
+        <td data-bind="text: py_fbp16"></td>
+        <td data-bind="text: py_fbp17"></td>
+        <td data-bind="text: py_dec"></td>
+        <td data-bind="text: ju_dec"></td>
+        <td data-bind="text: ju_sep"></td>
       </tr>
     </tbody>
    </table>
   </div>
-  
+<div id="controls">
+<h2> Please select the type of report </h2>
+<div id="form_reports">
+  <form id="report_form">
+    <label> Generate report by </label>
+      <input type="radio" name="report_type" value="platform" data-bind="checked: reportType">By platform
+      <input type="radio" name="report_type" value="region"   data-bind="checked: reportType">By region <BR>
+  </form>
+  <select data-bind="options: reportOptions" style="width:50px"></select>
+     <span data-bind="text: reportOptions"></span>
+</div>
+</div>
 </body>
 </html>
 <script type='text/javascript' src='js/lib/knockout-3.4.2.js'></script>
