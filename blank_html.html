@@ -1,99 +1,122 @@
 <!doctype html>
 <html>
-<style>
-#convertData{
-  text-align:center;
-  max-height: 100px;
-  overflow-y: scroll; 
-}
-</style>
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
  <!--    <link rel="stylesheet" href="css/main.css"> -->
+  <link rel="stylesheet" type="text/css" href="css/w2ui.css" />
+  <link rel="stylesheet" type="text/css" href="http://cdn.datatables.net/1.10.16/css/jquery.dataTables.css">
   <title>  GSM Finance Report Monthly sales report generator</title>
 </head>
-  <body>
-  <label>Select monthly HFM data in CSV format: </label><BR><input id="csv_input" type="file"></input> <BR>
-  <button data-bind="click: parseCsv"> Start parsing to JSON </button>
-  <div id="convertErrors"> 
-   The following errors were detected: 
-   <table>
-    <thead>
-        <tr><th>Code</th><th>Error message</th><th>Row</th></tr>
-    </thead>
-    <tbody data-bind="foreach: parsedErrors">
-      <tr>
-        <td data-bind="text: code"></td>
-        <td data-bind="text: message"></td>
-        <td data-bind="text: row"></td>
-      </tr>
-    </tbody>
-   </table>
+<body>
+  <div id="tempDivToDelete">
+    <label>Select monthly HFM data in CSV format: </label><BR><input id="csv_input" type="file"><BR>
+    <button data-bind="click: parseCsv"> Start parsing to JSON </button>
+    <div id="convertErrors">
+      The following errors were detected:
+      <table>
+        <thead>
+            <tr><th>Code</th><th>Error message</th><th>Row</th></tr>
+        </thead>
+        <tbody data-bind="foreach: parsedErrors">
+          <tr>
+            <td data-bind="text: code"></td>
+            <td data-bind="text: message"></td>
+            <td data-bind="text: row"></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <p>The following data was imported:</p>
+    <div id="convertData">
+     <table id="csv_load">
+        <thead>
+            <tr>
+              <th>MTD/QTD/YTD</th>
+              <th>Region</th>
+              <th>Country</th>
+              <th>Month</th>
+              <th>Platform</th>
+              <th>Global Platform</th>
+              <th>G9 Country</th>
+              <th>Actual</th>
+              <th>Actual@FBP </th>
+              <th>Actual@JU </th>
+              <th>Actual@PY </th>
+              <th>FBP</th>
+              <th>JU</th>
+              <th>PY@Actual FX</th>
+              <th>PY@FBP16</th>
+              <th>PY@FBP17 </th>
+              <th>PY_FY@FBP17</th>
+              <th>JU_FY@FBP17</th>
+              <th>JU_SEP@FBP17</th>
+              <th>PY_%_OPS</th>
+              <th>PY_$</th>
+              <th>FBP_%</th>
+              <th>FBP_$</th>
+              <th>JU_%</th>
+              <th>JU_$</th>
+            </tr>
+        </thead>
+        <tbody data-bind="foreach: parsedData">
+          <tr>
+            <td data-bind="text: mtd_qtd_ytd"></td>
+            <td data-bind="text: region"></td>
+            <td data-bind="text: country"></td>
+            <td data-bind="text: month"></td>
+            <td data-bind="text: platform"></td>
+            <td data-bind="text: platformGlobalMapping"></td>
+            <td data-bind="text: g9Country"></td>
+            <td data-bind="text: actual"></td>
+            <td data-bind="text: actualAtFBP"></td>
+            <td data-bind="text: actualAtJU"></td>
+            <td data-bind="text: actualAtPY"></td>
+            <td data-bind="text: fbp"></td>
+            <td data-bind="text: ju"></td>
+            <td data-bind="text: pyAtActual"></td>
+            <td data-bind="text: pyAtFbp16"></td>
+            <td data-bind="text: pyAtFbp17"></td>
+            <td data-bind="text: py_decAtFbp17"></td>
+            <td data-bind="text: ju_decAtFbp17"></td>
+            <td data-bind="text: ju_sepAtFbp17"></td>
+            <!-- <td data-bind="text: vs_PY_Pct_ops"></td>
+            <td data-bind="text: vs_PY_$"></td>
+            <td data-bind="text: vs_FBP_Pct"></td>
+            <td data-bind="text: vs_FBP_$"></td>
+            <td data-bind="text: vs_JU_Pct"></td>
+            <td data-bind="text: vs_JU_$"></td> -->
+          </tr>
+        </tbody>
+      </table>
+    </div>
   </div>
-  <div id="convertData"> 
-   The following data was imported:
-   <table>
-    <thead>
-        <tr>
-          <th>MTD/QTD/YTD</th>
-          <th>Region</th>
-          <th>Country</th>
-          <th>Month</th>
-          <th>Platform</th>
-          <th>Actual</th>
-          <th>Actual @ FBP </th>
-          <th>Actual @ JU </th>
-          <th>Actual @ PY rate </th>
-          <th>FBP</th>
-          <th>JU</th>
-          <th>PY @ Actual FX </th>
-          <th>PY @ FBP 16</th>
-          <th>PY @ FBP 17 </th>
-          <th>PY_FY</th>
-          <th>JU_FY</th>
-          <th>JU_SEP</th>
-        </tr>
-    </thead>
-    <tbody data-bind="foreach: parsedData">
-      <tr>
-        <td data-bind="text: mtd_qtd_ytd"></td>
-        <td data-bind="text: region"></td>
-        <td data-bind="text: country"></td>
-        <td data-bind="text: month"></td>
-        <td data-bind="text: platform"></td>
-        <td data-bind="text: actual"></td>
-        <td data-bind="text: actual_Fbp"></td>
-        <td data-bind="text: actual_Ju"></td>
-        <td data-bind="text: actual_Pyrate"></td>
-        <td data-bind="text: fbp"></td>
-        <td data-bind="text: ju"></td>
-        <td data-bind="text: py_actualFx"></td>
-        <td data-bind="text: py_fbp16"></td>
-        <td data-bind="text: py_fbp17"></td>
-        <td data-bind="text: py_dec"></td>
-        <td data-bind="text: ju_dec"></td>
-        <td data-bind="text: ju_sep"></td>
-      </tr>
-    </tbody>
-   </table>
+  <div id="controls">
+    <h2> Please select the type of report </h2>
+    <div id="form_reports">
+      <form id="report_form">
+        <button data-bind="click: createReportSource">Create Report Source</button> <BR>
+        <label> Generate report by </label> <BR>
+          <input type="radio" name="report_by" value="platform" data-bind="checked: reportType">By platform
+          <input type="radio" name="report_by" value="region"   data-bind="checked: reportType">By region <BR>
+          <input type="radio" name="report_period" value="YTD"    data-bind="checked: reportPeriod">YTD
+          <input type="radio" name="report_period" value="QTD"    data-bind="checked: reportPeriod">QTD
+          <input type="radio" name="report_period" value="MTD"    data-bind="checked: reportPeriod">MTD <BR>
+          <input type="checkbox" data-bind="checked: breakByPlatform">Split by platform
+      </form>
+      <select data-bind="options: reportOptions" size="9" style="width:150px"></select>
+    </div>
   </div>
-<div id="controls">
-<h2> Please select the type of report </h2>
-<div id="form_reports">
-  <form id="report_form">
-    <label> Generate report by </label>
-      <input type="radio" name="report_type" value="platform" data-bind="checked: reportType">By platform
-      <input type="radio" name="report_type" value="region"   data-bind="checked: reportType">By region <BR>
-  </form>
-  <select data-bind="options: reportOptions" style="width:50px"></select>
-     <span data-bind="text: reportOptions"></span>
-</div>
-</div>
+  <div id="grid" style="width: 70%; height: 400px; margin:auto"></div>
+  <script type='text/javascript' src='js/lib/jquery-3.2.1.min.js'></script>
+  <script type='text/javascript' src='js/lib/knockout-3.4.2.js'></script>
+  <script type="text/javascript" src="js/lib/w2ui.min.js"></script>
+  <!--<script type='text/javascript' src='js/lib/knockout.mapping.js'></script>-->
+  <script type='text/javascript' src='js/lib/papaparse.min.js'></script>
+  <script type="text/javascript" charset="utf8" src="http://cdn.datatables.net/1.10.16/js/jquery.dataTables.js"></script>
+  <script src="https://d3js.org/d3.v4.min.js"></script>
+  <script src='js/csvdata.js'></script>
+  <script src='js/report_generator.js'></script>
 </body>
 </html>
-<script type='text/javascript' src='js/lib/knockout-3.4.2.js'></script>
-<script type='text/javascript' src='js/lib/jquery-3.2.1.min.js'></script>
-<script type='text/javascript' src='js/lib/papaparse.min.js'></script>
-<script src='js/report_generator.js'></script>
