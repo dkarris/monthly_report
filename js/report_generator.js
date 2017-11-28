@@ -26,7 +26,7 @@ var uniqueRegion;
 var uniquePlatform;
 var tempArray = []; // delete later
 var tempArray2 = []; // delete later
-var W2Records = [];
+//var W2Records = [];
 
 
 // VMMV model
@@ -47,8 +47,8 @@ ko.applyBindings(ViewModel);
 
 // temp development
 (function selfLaunch() {
-//   $('#tempDivToDelete').hide()
-//   ViewModel.parsedData(myTempArray);
+  $('#tempDivToDelete').hide()
+  ViewModel.parsedData(myTempArray);
 // change array prototype to include last method
   if (!Array.prototype.last) {
       Array.prototype.last = function () {
@@ -199,7 +199,7 @@ function D3NestToGrid(node, arrayToAppend, recid) {
 
 function createReportSource() {
     //var tempArray = [];
-    
+    var W2Records = [];
     
     // Clear filtered array
     ViewModel.parsedFilteredData().removeAll;
@@ -211,30 +211,53 @@ function createReportSource() {
         return element['mtd_qtd_ytd'] == periodCriteria;
     }));
   
-  
+    
     //parsedFilteredData has the basis to work on
     // next create roll up with d3. Use tempArray to simplify syntaxis for ViewModel.parsedfiltedarray....
-    tempArray = d3.nest()
-      .key(function (d){return d.region;}) //.key(function (d) {return d.country;})
-      .key(function (d) {return d.country;})
-      .key(function (d) {return d.platformGlobalMapping})
-      .rollup(function(v) {return {
-        actual: d3.sum(v, function(d) {return d.actual;}),
-        actualAtFBP: d3.sum(v, function(d) {return d.actualAtFBP;}),
-        actualAtJU: d3.sum(v, function(d) {return d.actualAtJU;}),
-        actualAtPY: d3.sum(v, function(d) {return d.actualAtPY;}),
-        fbp: d3.sum(v, function(d) {return d.fbp;}),
-        ju: d3.sum(v, function(d) {return d.ju;}),
-        ju_decAtFbp17: d3.sum(v, function(d) {return d.ju_decAtFbp17;}),
-        ju_sepAtFbp17: d3.sum(v, function(d) {return d.ju_sepAtFbp17;}),
-        pyAtActual: d3.sum(v, function(d) {return d.pyAtActual;}),
-        pyAtFbp16: d3.sum(v, function(d) {return d.pyAtFbp16;}),
-        pyAtFbp17: d3.sum(v, function(d) {return d.pyAtFbp17;}),
-        py_decAtFbp17: d3.sum(v, function(d) {return d.py_decAtFbp17;}),
-        py_sepAtFbp17: d3.sum(v, function(d) {return d.py_sepAtFbp17;})}})
-        .entries(ViewModel.parsedFilteredData());
+    if (ViewModel.reportType() == 'region') {
+        tempArray = d3.nest()
+        .key(function (d){return d.region;}) //.key(function (d) {return d.country;})
+        .key(function (d) {return d.country;})
+        .key(function (d) {return d.platformGlobalMapping})
+        .rollup(function(v) {return {
+            actual: d3.sum(v, function(d) {return d.actual;}),
+            actualAtFBP: d3.sum(v, function(d) {return d.actualAtFBP;}),
+            actualAtJU: d3.sum(v, function(d) {return d.actualAtJU;}),
+            actualAtPY: d3.sum(v, function(d) {return d.actualAtPY;}),
+            fbp: d3.sum(v, function(d) {return d.fbp;}),
+            ju: d3.sum(v, function(d) {return d.ju;}),
+            ju_decAtFbp17: d3.sum(v, function(d) {return d.ju_decAtFbp17;}),
+            ju_sepAtFbp17: d3.sum(v, function(d) {return d.ju_sepAtFbp17;}),
+            pyAtActual: d3.sum(v, function(d) {return d.pyAtActual;}),
+            pyAtFbp16: d3.sum(v, function(d) {return d.pyAtFbp16;}),
+            pyAtFbp17: d3.sum(v, function(d) {return d.pyAtFbp17;}),
+            py_decAtFbp17: d3.sum(v, function(d) {return d.py_decAtFbp17;}),
+            py_sepAtFbp17: d3.sum(v, function(d) {return d.py_sepAtFbp17;})}})
+            .entries(ViewModel.parsedFilteredData());
+        };
+    if (ViewModel.reportType() == 'platform') {
+        tempArray = d3.nest()
+        .key(function (d) {return d.platformGlobalMapping;}) //.key(function (d) {return d.country;})
+        .key(function (d) {return d.region;})
+        .key(function (d) {return d.country;})
+        .rollup(function(v) {return {
+            actual: d3.sum(v, function(d) {return d.actual;}),
+            actualAtFBP: d3.sum(v, function(d) {return d.actualAtFBP;}),
+            actualAtJU: d3.sum(v, function(d) {return d.actualAtJU;}),
+            actualAtPY: d3.sum(v, function(d) {return d.actualAtPY;}),
+            fbp: d3.sum(v, function(d) {return d.fbp;}),
+            ju: d3.sum(v, function(d) {return d.ju;}),
+            ju_decAtFbp17: d3.sum(v, function(d) {return d.ju_decAtFbp17;}),
+            ju_sepAtFbp17: d3.sum(v, function(d) {return d.ju_sepAtFbp17;}),
+            pyAtActual: d3.sum(v, function(d) {return d.pyAtActual;}),
+            pyAtFbp16: d3.sum(v, function(d) {return d.pyAtFbp16;}),
+            pyAtFbp17: d3.sum(v, function(d) {return d.pyAtFbp17;}),
+            py_decAtFbp17: d3.sum(v, function(d) {return d.py_decAtFbp17;}),
+            py_sepAtFbp17: d3.sum(v, function(d) {return d.py_sepAtFbp17;})}})
+            .entries(ViewModel.parsedFilteredData());
+    }
     
-      tempArray = {'values':tempArray, 'key': 'WW','level':'WW'};
+    tempArray = {'values':tempArray, 'key': 'WW','level':'WW'};
     
     // launch recursive function to do roll up on a non leaf nodes
     // Create subtotals by region or platform
@@ -242,6 +265,7 @@ function createReportSource() {
       rollupRecursive(tempArray);
 
     // now need to convert nice tempArray list to format W2UI for data grid. W2Records is an array for W2 Grid
+      W2Records.length = 0; //clear to 
       D3NestToGrid(tempArray, W2Records);
       $('#grid').w2grid().records = W2Records;
       $('#grid').w2grid().refresh();
@@ -333,18 +357,18 @@ function processJSON(result,file) {
             'month'       : currentRow['month'],
             'platform'    : currentRow['platform'],
             'actual'      : (Number(String(currentRow['Actual']).replace(",",""))/1000).toFixed(2) || 0, // this replace "," for "" - as there were some cases of thousand
-            'actualAtFBP' : (Number(String(currentRow['Actual@FBP']).replace(",","")) || 0), // next in NaN returns 0
-            'actualAtJU'  : (Number(String(currentRow['Actual@JU']).replace(",","")) || 0),
-            'actualAtPY'  : (Number(String(currentRow['Actual@PYrate']).replace(",","")) || 0),
-            'fbp'         : (Number(String(currentRow['FBP']).replace(",","")) || 0),
-            'ju'          : (Number(String(currentRow['JU']).replace(",","")) || 0),
-            'ju_decAtFbp17': (Number(String(currentRow['JU_DEC@FBP17']).replace(",","")) || 0),
-            'ju_sepAtFbp17': (Number(String(currentRow['JU_Sep']).replace(",","")) || 0),
-            'pyAtActual'   : (Number(String(currentRow['PY@ActualFX']).replace(",","")) || 0),
-            'pyAtFbp16'    : (Number(String(currentRow['PY@FBP16']).replace(",","")) || 0),
-            'pyAtFbp17'    : (Number(String(currentRow['PY@FBP17']).replace(",","")) || 0),
-            'py_decAtFbp17': (Number(String(currentRow['PY_DEC@FBP17']).replace(",","")) || 0),
-            'py_sepAtFbp17': (Number(String(currentRow['PY_SEP@FBP17']).replace(",","")) || 0)
+            'actualAtFBP' : (Number(String(currentRow['Actual@FBP']).replace(",",""))/1000).toFixed(2) || 0, // next in NaN returns 0
+            'actualAtJU'  : (Number(String(currentRow['Actual@JU']).replace(",",""))/1000).toFixed(2) || 0,
+            'actualAtPY'  : (Number(String(currentRow['Actual@PYrate']).replace(",",""))/1000).toFixed(2) || 0,
+            'fbp'         : (Number(String(currentRow['FBP']).replace(",",""))/1000).toFixed(2) || 0,
+            'ju'          : (Number(String(currentRow['JU']).replace(",",""))/1000).toFixed(2) || 0,
+            'ju_decAtFbp17': (Number(String(currentRow['JU_DEC@FBP17']).replace(",",""))/1000).toFixed(2) || 0,
+            'ju_sepAtFbp17': (Number(String(currentRow['JU_Sep']).replace(",",""))/1000).toFixed(2) || 0,
+            'pyAtActual'   : (Number(String(currentRow['PY@ActualFX']).replace(",",""))/1000).toFixed(2) || 0,
+            'pyAtFbp16'    : (Number(String(currentRow['PY@FBP16']).replace(",",""))/1000).toFixed(2) || 0,
+            'pyAtFbp17'    : (Number(String(currentRow['PY@FBP17']).replace(",",""))/1000).toFixed(2) || 0,
+            'py_decAtFbp17': (Number(String(currentRow['PY_DEC@FBP17']).replace(",",""))/1000).toFixed(2) || 0,
+            'py_sepAtFbp17': (Number(String(currentRow['PY_SEP@FBP17']).replace(",",""))/1000).toFixed(2) || 0
         };
         // next add some calculated fields for each object
         // parsedRow['vs_PY_$'] = ((parsedRow['actualAtPY'] - parsedRow['pyAtActual']).toFixed(0) || 0);
