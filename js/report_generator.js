@@ -47,8 +47,8 @@ ko.applyBindings(ViewModel);
 
 // temp development
 (function selfLaunch() {
-  $('#tempDivToDelete').hide()
-  ViewModel.parsedData(myTempArray);
+//   $('#tempDivToDelete').hide()
+//   ViewModel.parsedData(myTempArray);
 // change array prototype to include last method
   if (!Array.prototype.last) {
       Array.prototype.last = function () {
@@ -95,8 +95,6 @@ ViewModel.reportType.subscribe(function(value){
 
 function getLastItemKeys(node) {
   if (node.values) {
-    console.log('value:');
-    console.log(node.values);  
     return getLastItemKeys(node.values[0]);}
   else { return (Object.keys(node.value));}
 }
@@ -156,23 +154,39 @@ function rollupRecursive(node) {
 
 // function transformates D3 tree into multilevel W2UI grid
 
+function recordToW2GridObject(element, recid) {
+    return recordObject = {
+        recid: recid,
+        datapoint: element.key,
+        act: element.actual,
+        py: element.pyAtActual,
+        vs_PY_$: element.vs_PY_$,
+        vs_PY_PCT: element.vs_PY_Pct_ops,
+        fbp: element.fbp,
+        vs_FBP_$: element.vs_FBP_$,
+        vs_FBP_PCT: element.vs_FBP_Pct,
+        ju: element.ju,
+        vs_JU_$: element.vs_JU_$,
+        vs_JU_PCT: element.vs_JU_Pct
+    }
+}
+
 function D3NestToGrid(node, arrayToAppend, recid) {
-    // no node.values => root element recid = 1 else increment + 1
+    
+    // WW level is not an array - one exemption. So create manual object
+    if (node.key == "WW") {
+        arrayToAppend.push(recordToW2GridObject(node,0));
+        // arrayToAppend.last().w2ui = { children: [] };
+        // var newBranch = arrayToAppend.last().w2ui.children;
+        // D3NestToGrid(node.values, newBranch, 1);
+    }
     if (!recid) {
         var recid = 1;
     } else {
         recid = Number(recid + String(11));
     }
     node.values.forEach(function (element) {
-        var recordObject = {
-            recid: recid,
-            datapoint: element.key,
-            act: element.actual,
-            py: element.actualAtPY,
-            vs_py_$: element.vs_PY_$,
-            vs_py_pct: element.vs_PY_Pct_ops
-        }
-        arrayToAppend.push(recordObject);
+        arrayToAppend.push(recordToW2GridObject(element, recid));
         recid++;
         if (element.values) {
             arrayToAppend.last().w2ui = { children: [] };
@@ -235,32 +249,6 @@ function createReportSource() {
 
 }
 
-// function generateReport() {
-//     var reportText;
-//      if (ViewModel.reportType() == 'region') {
-//        // generate report by region
-//        // lets do YTD first
-//        if (!ViewModel.breakByPlatform() || ViewModel.breakByPlatform()) {
-//        // Aggregate report here - just countries. Do for each region - "US/EMEA/ASPAC/LATAM/CANADA"
-//          ViewModel.reportOptions().forEach (function (value,index) {
-//            console.log(value,index);
-//            //Get all records with region = value
-//            var regionRecordsArray = ViewModel.parsedData().filter(function(element){
-//              if (element['region'] === value && element['mtd_qtd_ytd'] === 'YTD') return element
-//            });
-//         console.log(regionRecordsArray);
-//         });
-//     } else {
-//      // Add split platforms by country
-       
-//     }
-//     } else {
-//      // generate report by platform
-//     }
-
-// }
-
-
 
 // temp function to display grid.  For production move code to OnReady and bind data  to ko.observable
 function displayGrid() {
@@ -272,17 +260,17 @@ function displayGrid() {
             {field: 'datapoint', caption:'', size: '7%'},
             {field: 'act', caption: 'ACT', size: '7%' },
             {field: 'py', caption: 'PY', size: '7%' },
-            {field: 'vs_py_$', caption: '$', size: '7%' },
-            {field: 'vs_py_%', caption: '%', size: '3%' },
+            {field: 'vs_PY_$', caption: '$', size: '7%' },
+            {field: 'vs_PY_PCT', caption: '%', size: '3%' },
             {field: 'fbp', caption: 'FBP', size: '10%' },
-            {field: 'vs_fbp_$', caption: '$', size: '7%' },
-            {field: 'vs_fbp_%', caption: '%', size: '3%' },
+            {field: 'vs_FBP_$', caption: '$', size: '7%' },
+            {field: 'vs_FBP_PCT', caption: '%', size: '3%' },
             {field: 'ju', caption: 'FBP', size: '10%' },
-            {field: 'vs_ju_$', caption: '$', size: '7%' },
-            {field: 'vs_ju_%', caption: '%', size: '3%' },
+            {field: 'vs_JU_$', caption: '$', size: '7%' },
+            {field: 'vs_JU_PCT', caption: '%', size: '3%' },
             {field: 'nu', caption: 'NU', size: '10%' },
-            {field: 'vs_nu_$', caption: '$', size: '3%' },
-            {field: 'vs_nu_%', caption: '%', size: '3%' }
+            {field: 'vs_NU_$', caption: '$', size: '3%' },
+            {field: 'vs_NU_PCT', caption: '%', size: '3%' }
         ],
         columnGroups: [
             {caption: '', span:3},
@@ -344,7 +332,7 @@ function processJSON(result,file) {
             'region'      : currentRow['region'],
             'month'       : currentRow['month'],
             'platform'    : currentRow['platform'],
-            'actual'      : (Number(String(currentRow['Actual']).replace(",","")) || 0), // this replace "," for "" - as there were some cases of thousand
+            'actual'      : (Number(String(currentRow['Actual']).replace(",",""))/1000).toFixed(2) || 0, // this replace "," for "" - as there were some cases of thousand
             'actualAtFBP' : (Number(String(currentRow['Actual@FBP']).replace(",","")) || 0), // next in NaN returns 0
             'actualAtJU'  : (Number(String(currentRow['Actual@JU']).replace(",","")) || 0),
             'actualAtPY'  : (Number(String(currentRow['Actual@PYrate']).replace(",","")) || 0),
