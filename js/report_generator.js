@@ -216,7 +216,7 @@ function createReportSource() {
     // next create roll up with d3. Use tempArray to simplify syntaxis for ViewModel.parsedfiltedarray....
     if (ViewModel.reportType() == 'region') {
         tempArray = d3.nest()
-        .key(function (d){return d.region;}) //.key(function (d) {return d.country;})
+        .key(function (d){return d.region;})
         .key(function (d) {return d.country;})
         .key(function (d) {return d.platformGlobalMapping})
         .rollup(function(v) {return {
@@ -237,7 +237,7 @@ function createReportSource() {
         };
     if (ViewModel.reportType() == 'platform') {
         tempArray = d3.nest()
-        .key(function (d) {return d.platformGlobalMapping;}) //.key(function (d) {return d.country;})
+        .key(function (d) {return d.platformGlobalMapping;})
         .key(function (d) {return d.region;})
         .key(function (d) {return d.country;})
         .rollup(function(v) {return {
@@ -255,7 +255,7 @@ function createReportSource() {
             py_decAtFbp17: d3.sum(v, function(d) {return d.py_decAtFbp17;}),
             py_sepAtFbp17: d3.sum(v, function(d) {return d.py_sepAtFbp17;})}})
             .entries(ViewModel.parsedFilteredData());
-    }
+        }
     
     tempArray = {'values':tempArray, 'key': 'WW','level':'WW'};
     
@@ -412,3 +412,13 @@ function errorHandler (error,file) {
     console.log(error);
 }
 
+// Generate line of report per each node
+function generateReport(platform_node, params) {
+    
+}
+
+function sortObjects (node,sortKey) {
+    return node.values.sort(function(element1, element2){
+        return element1[sortKey] - element2[sortKey]
+    })
+}

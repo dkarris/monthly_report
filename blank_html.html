@@ -9,6 +9,14 @@
   <link rel="stylesheet" type="text/css" href="http://cdn.datatables.net/1.10.16/css/jquery.dataTables.css">
   <title>  GSM Finance Report Monthly sales report generator</title>
 </head>
+<style>
+  body {
+  display:flex;
+  }
+  #grid {
+  width: 70%; height: 400px; margin:auto;
+  }
+</style>
 <body>
   <div id="tempDivToDelete">
     <label>Select monthly HFM data in CSV format: </label><BR><input id="csv_input" type="file"><BR>
@@ -108,7 +116,9 @@
       <select data-bind="options: reportOptions" size="9" style="width:150px"></select>
     </div>
   </div>
-  <div id="grid" style="width: 70%; height: 400px; margin:auto"></div>
+  <div id="grid"></div>
+  <!-- Div to display report -->
+  <div id="reportOutput"></div>
   <script type='text/javascript' src='js/lib/jquery-3.2.1.min.js'></script>
   <script type='text/javascript' src='js/lib/knockout-3.4.2.js'></script>
   <script type="text/javascript" src="js/lib/w2ui.min.js"></script>
