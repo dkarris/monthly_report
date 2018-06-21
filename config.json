@@ -1,0 +1,19 @@
+{
+  "Comment": "please go to jsoneditoronline.org to edit in nice environment",
+  "quarterFullName": "second",
+  "quarterCY": "2Q18",
+  "quarterPY": "2Q17",
+  "Growth verbs": {
+    "fueled by": 0.5,
+    "driven by": 0.3,
+    "caused by": 0.2
+  },
+  "Decline verbs": {
+    "was impacted negatively by": 0.3,
+    "driven by": 0.6,
+    "caused by": 0.1
+  },
+  "Transition verbs": {
+    "partially offset by": 1
+  }
+}
